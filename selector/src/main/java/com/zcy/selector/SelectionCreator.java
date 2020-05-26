@@ -79,9 +79,7 @@ public final class SelectionCreator {
         mSelectionSpec = SelectionSpec.getCleanInstance();
         mSelectionSpec.setMimeTypeSet(mimeTypes);
         mSelectionSpec.setMediaTypeExclusive(mediaTypeExclusive);
-        ;
         mSelectionSpec.setOrientation(SCREEN_ORIENTATION_UNSPECIFIED);
-        ;
     }
 
     /**

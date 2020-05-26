@@ -1,6 +1,5 @@
 package com.zcy.selector.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.database.Cursor;
@@ -166,7 +165,7 @@ public class SelectorActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        setResult(Activity.RESULT_CANCELED);
+        setResult(AppCompatActivity.RESULT_CANCELED);
         super.onBackPressed();
     }
 

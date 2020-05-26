@@ -54,28 +54,22 @@ public class PreviewItemFragment extends Fragment {
         ImageView image = view.findViewById(R.id.image_view);
         if (item.isVideo()) {
             videoPlayButton.setVisibility(View.VISIBLE);
-            videoPlayButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(item.getContentUri(), "video/*");
-                    try {
-                        startActivity(intent);
-                    } catch (ActivityNotFoundException e) {
-                        Toast.makeText(getContext(), R.string.error_no_video_activity, Toast.LENGTH_SHORT).show();
-                    }
+            videoPlayButton.setOnClickListener(v -> {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(item.getContentUri(), "video/*");
+                try {
+                    startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(getContext(), R.string.error_no_video_activity, Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
             videoPlayButton.setVisibility(View.GONE);
         }
 
-        image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onClick();
-                }
+        image.setOnClickListener(v -> {
+            if (mListener != null) {
+                mListener.onClick();
             }
         });
 

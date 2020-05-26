@@ -14,7 +14,6 @@ import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.FlowableEmitter;
 import io.reactivex.rxjava3.core.FlowableOnSubscribe;
 import io.reactivex.rxjava3.core.Scheduler;
-import io.reactivex.rxjava3.functions.Action;
 
 import static com.zcy.selector.internal.loader.RxCursorLoader.TAG;
 import static com.zcy.selector.internal.loader.RxCursorLoader.isDebugLoggingEnabled;
@@ -43,12 +42,7 @@ final class RxCursorLoaderFlowableFactory {
         return Flowable
                 .create(onSubscribe, backpressureStrategy)
                 .subscribeOn(scheduler)
-                .doFinally(new Action() {
-                    @Override
-                    public void run() {
-                        onSubscribe.release();
-                    }
-                });
+                .doFinally(() -> onSubscribe.release());
     }
 
     private static final class CursorLoaderOnSubscribe
@@ -132,11 +126,6 @@ final class RxCursorLoaderFlowableFactory {
             }
         };
 
-        final Runnable mReloadRunnable = new Runnable() {
-            @Override
-            public void run() {
-                reload();
-            }
-        };
+        final Runnable mReloadRunnable = () -> reload();
     }
 }

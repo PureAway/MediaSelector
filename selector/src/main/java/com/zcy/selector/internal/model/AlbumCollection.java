@@ -26,7 +26,6 @@ import java.util.Set;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class AlbumCollection {
@@ -103,7 +102,7 @@ public class AlbumCollection {
     private Disposable mCursorDisposable;
 
     public void onCreate(FragmentActivity activity, final AlbumCallbacks callbacks) {
-        mContext = new WeakReference<Context>(activity);
+        mContext = new WeakReference<>(activity);
         mCallbacks = callbacks;
     }
 
@@ -126,27 +125,21 @@ public class AlbumCollection {
                 .flowable(mContext.get().getContentResolver(),
                         query, Schedulers.io(), BackpressureStrategy.LATEST)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Cursor>() {
-                    @Override
-                    public void accept(Cursor cursor) {
-                        if (!mLoadFinished) {
-                            mLoadFinished = true;
-                        }
-                        if (null != mCallbacks) {
-                            Cursor result = getReturnCursor(cursor);
-                            if (null != AlbumCollection.this.cursor) {
-                                AlbumCollection.this.cursor.close();
-                                AlbumCollection.this.cursor = result;
-                            }
-                            mCallbacks.onAlbumLoad(result);
-                        }
+                .subscribe(cursor -> {
+                    if (!mLoadFinished) {
+                        mLoadFinished = true;
                     }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) {
-                        if (null != mCallbacks) {
-                            mCallbacks.onLoadFailed(throwable);
+                    if (null != mCallbacks) {
+                        Cursor result = getReturnCursor(cursor);
+                        if (null != AlbumCollection.this.cursor) {
+                            AlbumCollection.this.cursor.close();
+                            AlbumCollection.this.cursor = result;
                         }
+                        mCallbacks.onAlbumLoad(result);
+                    }
+                }, throwable -> {
+                    if (null != mCallbacks) {
+                        mCallbacks.onLoadFailed(throwable);
                     }
                 });
     }

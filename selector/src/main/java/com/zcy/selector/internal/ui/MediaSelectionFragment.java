@@ -135,7 +135,7 @@ public class MediaSelectionFragment extends Fragment implements
     @Override
     public void onMediaClick(Album album, Item item, int adapterPosition) {
         if (mOnMediaClickListener != null) {
-            mOnMediaClickListener.onMediaClick((Album) getArguments().getParcelable(EXTRA_ALBUM),
+            mOnMediaClickListener.onMediaClick(getArguments().getParcelable(EXTRA_ALBUM),
                     item, adapterPosition);
         }
     }

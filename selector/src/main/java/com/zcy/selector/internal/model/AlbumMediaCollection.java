@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
-
 import com.zcy.selector.internal.entity.Album;
 import com.zcy.selector.internal.entity.Item;
 import com.zcy.selector.internal.entity.SelectionSpec;
@@ -23,7 +22,6 @@ import java.lang.ref.WeakReference;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class AlbumMediaCollection {
@@ -114,7 +112,7 @@ public class AlbumMediaCollection {
 
 
     public void onCreate(@NonNull FragmentActivity context, @NonNull AlbumMediaCallbacks callbacks) {
-        mContext = new WeakReference<Context>(context);
+        mContext = new WeakReference<>(context);
         mCallbacks = callbacks;
     }
 
@@ -151,26 +149,20 @@ public class AlbumMediaCollection {
                 .flowable(mContext.get().getContentResolver(),
                         query, Schedulers.io(), BackpressureStrategy.LATEST)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Cursor>() {
-                    @Override
-                    public void accept(Cursor cursor) {
-                        if (null != mCallbacks) {
-                            if (!mEnableCapture || !MediaStoreCompat.hasCameraFeature(mContext.get())) {
-                                mCallbacks.onAlbumMediaLoad(cursor);
-                                return;
-                            }
-                            MatrixCursor dummy = new MatrixCursor(PROJECTION);
-                            dummy.addRow(new Object[]{Item.ITEM_ID_CAPTURE, Item.ITEM_DISPLAY_NAME_CAPTURE, "", 0, 0});
-                            MergeCursor mergeCursor = new MergeCursor(new Cursor[]{dummy, cursor});
-                            mCallbacks.onAlbumMediaLoad(mergeCursor);
+                .subscribe(cursor -> {
+                    if (null != mCallbacks) {
+                        if (!mEnableCapture || !MediaStoreCompat.hasCameraFeature(mContext.get())) {
+                            mCallbacks.onAlbumMediaLoad(cursor);
+                            return;
                         }
+                        MatrixCursor dummy = new MatrixCursor(PROJECTION);
+                        dummy.addRow(new Object[]{Item.ITEM_ID_CAPTURE, Item.ITEM_DISPLAY_NAME_CAPTURE, "", 0, 0});
+                        MergeCursor mergeCursor = new MergeCursor(new Cursor[]{dummy, cursor});
+                        mCallbacks.onAlbumMediaLoad(mergeCursor);
                     }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) {
-                        if (null != mCallbacks) {
-                            mCallbacks.onLoadFailed(throwable);
-                        }
+                }, throwable -> {
+                    if (null != mCallbacks) {
+                        mCallbacks.onLoadFailed(throwable);
                     }
                 });
     }

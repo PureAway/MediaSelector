@@ -100,63 +100,56 @@ public abstract class BasePreviewActivity extends AppCompatActivity implements V
         mBottomToolbar = findViewById(R.id.bottom_toolbar);
         mTopToolbar = findViewById(R.id.top_toolbar);
 
-        mCheckView.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Item item = mAdapter.getMediaItem(mPager.getCurrentItem());
-                if (mSelectedCollection.isSelected(item)) {
-                    mSelectedCollection.remove(item);
-                    if (mSpec.isCountable()) {
-                        mCheckView.setCheckedNum(CheckView.UNCHECKED);
-                    } else {
-                        mCheckView.setChecked(false);
-                    }
+        mCheckView.setOnClickListener(v -> {
+            Item item = mAdapter.getMediaItem(mPager.getCurrentItem());
+            if (mSelectedCollection.isSelected(item)) {
+                mSelectedCollection.remove(item);
+                if (mSpec.isCountable()) {
+                    mCheckView.setCheckedNum(CheckView.UNCHECKED);
                 } else {
-                    if (assertAddSelection(item)) {
-                        mSelectedCollection.add(item);
-                        if (mSpec.isCountable()) {
-                            mCheckView.setCheckedNum(mSelectedCollection.checkedNumOf(item));
-                        } else {
-                            mCheckView.setChecked(true);
-                        }
+                    mCheckView.setChecked(false);
+                }
+            } else {
+                if (assertAddSelection(item)) {
+                    mSelectedCollection.add(item);
+                    if (mSpec.isCountable()) {
+                        mCheckView.setCheckedNum(mSelectedCollection.checkedNumOf(item));
+                    } else {
+                        mCheckView.setChecked(true);
                     }
                 }
-                updateApplyButton();
+            }
+            updateApplyButton();
 
-                if (mSpec.getOnSelectedListener() != null) {
-                    mSpec.getOnSelectedListener().onSelected(
-                            mSelectedCollection.asListOfUri(), mSelectedCollection.asListOfString());
-                }
+            if (mSpec.getOnSelectedListener() != null) {
+                mSpec.getOnSelectedListener().onSelected(
+                        mSelectedCollection.asListOfUri(), mSelectedCollection.asListOfString());
             }
         });
 
 
         mOriginalLayout = findViewById(R.id.originalLayout);
         mOriginal = findViewById(R.id.original);
-        mOriginalLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mOriginalLayout.setOnClickListener(v -> {
 
-                int count = countOverMaxSize();
-                if (count > 0) {
-                    IncapableDialog incapableDialog = IncapableDialog.newInstance("",
-                            getString(R.string.error_over_original_count, count, mSpec.getOriginalMaxSize()));
-                    incapableDialog.show(getSupportFragmentManager(),
-                            IncapableDialog.class.getName());
-                    return;
-                }
+            int count = countOverMaxSize();
+            if (count > 0) {
+                IncapableDialog incapableDialog = IncapableDialog.newInstance("",
+                        getString(R.string.error_over_original_count, count, mSpec.getOriginalMaxSize()));
+                incapableDialog.show(getSupportFragmentManager(),
+                        IncapableDialog.class.getName());
+                return;
+            }
 
-                mOriginalEnable = !mOriginalEnable;
-                mOriginal.setChecked(mOriginalEnable);
-                if (!mOriginalEnable) {
-                    mOriginal.setColor(Color.WHITE);
-                }
+            mOriginalEnable = !mOriginalEnable;
+            mOriginal.setChecked(mOriginalEnable);
+            if (!mOriginalEnable) {
+                mOriginal.setColor(Color.WHITE);
+            }
 
 
-                if (mSpec.getOnCheckedListener() != null) {
-                    mSpec.getOnCheckedListener().onCheck(mOriginalEnable);
-                }
+            if (mSpec.getOnCheckedListener() != null) {
+                mSpec.getOnCheckedListener().onCheck(mOriginalEnable);
             }
         });
 
