@@ -1,0 +1,3 @@
+rootProject.name='MediaSelector'
+include ':app'
+include ':selector'
