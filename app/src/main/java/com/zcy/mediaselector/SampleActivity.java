@@ -12,11 +12,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 
 import com.zcy.selector.MimeType;
 import com.zcy.selector.Selector;
@@ -25,8 +23,6 @@ import com.zcy.selector.engine.impl.GlideEngine;
 import com.zcy.selector.engine.impl.PicassoEngine;
 import com.zcy.selector.filter.Filter;
 import com.zcy.selector.internal.entity.CaptureStrategy;
-import com.zcy.selector.listener.OnCheckedListener;
-import com.zcy.selector.listener.OnSelectedListener;
 
 import java.util.List;
 
@@ -66,22 +62,12 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                         .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                         .thumbnailScale(0.65f)
                         .imageEngine(new GlideEngine())
-                        .setOnSelectedListener(new OnSelectedListener() {
-                            @Override
-                            public void onSelected(@NonNull List<Uri> uriList, @NonNull List<String> pathList) {
-                                Log.e("onSelected", "onSelected: pathList=" + pathList);
-                            }
-                        })
+                        .setOnSelectedListener((uriList, pathList) -> Log.e("onSelected", "onSelected: pathList=" + pathList))
                         .showSingleMediaType(true)
                         .originalEnable(false)
                         .maxOriginalSize(10)
                         .autoHideToolbarOnSingleTap(true)
-                        .setOnCheckedListener(new OnCheckedListener() {
-                            @Override
-                            public void onCheck(boolean isChecked) {
-                                Log.e("isChecked", "onCheck: isChecked=" + isChecked);
-                            }
-                        })
+                        .setOnCheckedListener(isChecked -> Log.e("isChecked", "onCheck: isChecked=" + isChecked))
                         .forResult(REQUEST_CODE_CHOOSE);
                 break;
             case R.id.dracula:

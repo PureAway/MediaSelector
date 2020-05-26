@@ -34,8 +34,8 @@ public class App extends Application {
                 .setDownsampleEnabled(true)
                 .setDiskCacheEnabled(true)
                 .setMainDiskCacheConfig(diskCacheConfig)
-                .setMemoryChunkType(MemoryChunkType.ASHMEM_MEMORY)
-                .setImageTranscoderType(ImageTranscoderType.NATIVE_TRANSCODER)
+                .setMemoryChunkType(MemoryChunkType.BUFFER_MEMORY)
+                .setImageTranscoderType(ImageTranscoderType.JAVA_TRANSCODER)
                 .setBitmapsConfig(Bitmap.Config.RGB_565)
                 .setRequestListeners(listeners)
                 .build();
