@@ -56,6 +56,6 @@ publish {
     groupId = 'com.zcy'
     artifactId = 'selector'
     publishVersion = '1.0.0'
-    desc = 'A nice library for android to select local images and videos'
+    desc = 'A nice library for android to choose local images and videos'
     website = 'https://github.com/PureAway/MediaSelector'
 }
